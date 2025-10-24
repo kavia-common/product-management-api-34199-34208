@@ -4,6 +4,7 @@ from marshmallow import ValidationError
 
 from ..db import get_connection
 from ..schemas import ProductCreateSchema, ProductUpdateSchema, ProductSchema
+from ..schemas import BalanceSchema  # new schema for balance response
 
 # PUBLIC_INTERFACE
 blp = Blueprint(
@@ -57,6 +58,33 @@ class ProductsList(MethodView):
             cur = conn.execute("SELECT id, name, price, quantity FROM products WHERE id = ?", (new_id,))
             row = cur.fetchone()
             return _row_to_product(row)
+
+
+@blp.route("/balance")
+class ProductsBalance(MethodView):
+    """
+    PUBLIC_INTERFACE
+    get:
+      summary: Get total inventory value
+      description: Returns the total balance as sum of price * quantity across all products.
+    """
+
+    @blp.response(200, BalanceSchema)
+    def get(self):
+        """Calculate and return total inventory value."""
+        try:
+            with get_connection() as conn:
+                # SUM over price * quantity; COALESCE to 0.0 when table empty
+                cur = conn.execute("SELECT COALESCE(SUM(price * quantity), 0.0) AS total FROM products")
+                row = cur.fetchone()
+                total = float(row["total"]) if row and row["total"] is not None else 0.0
+                # Ensure non-negative due to DB constraints, but clamp just in case
+                if total < 0:
+                    total = 0.0
+                return {"total_balance": total}
+        except Exception:
+            # Unexpected error path: surface a 500 with safe message
+            abort(500, message="Failed to compute total balance")
 
 
 @blp.route("/<int:id>")

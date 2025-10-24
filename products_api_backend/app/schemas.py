@@ -47,3 +47,9 @@ class ProductUpdateSchema(Schema):
 class ProductSchema(ProductBaseSchema):
     """Schema for returning a product with id."""
     id = fields.Integer(required=True, metadata={"description": "Product identifier"})
+
+
+# PUBLIC_INTERFACE
+class BalanceSchema(Schema):
+    """Schema for returning total inventory value."""
+    total_balance = fields.Float(required=True, metadata={"description": "Sum of price * quantity across all products"})

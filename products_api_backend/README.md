@@ -54,6 +54,7 @@ On first run, the SQLite DB is initialized automatically.
 - PUT `/products/<id>` — Update product (partial or full)
   - Body: Any of `name`, `price`, `quantity`
 - DELETE `/products/<id>` — Delete product
+- GET `/products/balance` — Get total inventory value (sum of price * quantity)
 
 ## Request/Response Schemas
 
@@ -64,6 +65,18 @@ On first run, the SQLite DB is initialized automatically.
 Validation and error handling are performed via marshmallow and flask-smorest; typical errors:
 - 400 for invalid input
 - 404 when a product id is not found
+
+### Example: Total inventory value
+Request:
+```
+GET http://localhost:3001/products/balance
+```
+
+Response:
+```
+Status: 200 OK
+Body: { "total_balance": 199.9 }
+```
 
 ## Lightweight persistence
 
