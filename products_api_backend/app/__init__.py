@@ -19,11 +19,11 @@ app.config["OPENAPI_URL_PREFIX"] = "/docs"
 app.config["OPENAPI_SWAGGER_UI_PATH"] = ""
 app.config["OPENAPI_SWAGGER_UI_URL"] = "https://cdn.jsdelivr.net/npm/swagger-ui-dist/"
 
-# Initialize DB (idempotent)
+# Initialize DB (idempotent) on app start
 with app.app_context():
     init_db()
 
-# Register blueprints
+# Register blueprints to expose routes
 api = Api(app)
 api.register_blueprint(health_blp)
 api.register_blueprint(products_blp)

@@ -38,6 +38,12 @@ On first run, the SQLite DB is initialized automatically.
 - DB_PATH: Filesystem path to the SQLite database. Defaults to `instance/products.db` if not set.
 - PORT: Informational. The app binds to 0.0.0.0:3001 via run.py.
 
+## Routes organization
+
+- Health blueprint: `app/routes/health.py` exports `blp`
+- Products blueprint: `app/routes/products.py` exports `blp`
+- Both are registered in `app/__init__.py` via flask-smorest Api.
+
 ## Endpoints
 
 - GET `/` — Health check
