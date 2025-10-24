@@ -1,10 +1,11 @@
 from flask_smorest import Blueprint
 from flask.views import MethodView
 
-blp = Blueprint("Healt Check", "health check", url_prefix="/", description="Health check route")
-
+# Use proper naming for OpenAPI tags
+blp = Blueprint("Health", "health", url_prefix="/", description="Health check route")
 
 @blp.route("/")
 class HealthCheck(MethodView):
+    """Health check endpoint."""
     def get(self):
         return {"message": "Healthy"}
